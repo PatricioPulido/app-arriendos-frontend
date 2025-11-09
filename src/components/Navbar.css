@@ -1,0 +1,82 @@
+/* ==== ESTILOS BASE ==== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0077cc;
+  color: white;
+  padding: 10px 20px;
+  position: relative;
+}
+
+.navbar-logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Botón hamburguesa (por defecto visible solo en móvil) */
+.menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: none; /* lo ocultamos por defecto (desktop) */
+}
+
+/* Menú principal */
+.menu {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+}
+
+.menu li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.menu li a:hover {
+  text-decoration: underline;
+}
+
+/* ==== MEDIA QUERIES ==== */
+
+/* ✅ Hasta 768px: vista móvil */
+@media (max-width: 768px) {
+  .menu-btn {
+    display: block; /* botón visible */
+  }
+
+  .menu {
+    display: none; /* ocultamos el menú */
+    position: absolute;
+    top: 60px; /* debajo del navbar */
+    left: 0;
+    width: 100%;
+    background-color: #005fa3;
+    flex-direction: column;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .menu.open {
+    display: flex; /* mostramos cuando se abre */
+  }
+
+  .menu li {
+    margin: 10px 0;
+  }
+}
+
+/* ✅ Desde 769px en adelante: vista desktop */
+@media (min-width: 769px) {
+  .menu {
+    display: flex; /* menú horizontal visible */
+  }
+
+  .menu-btn {
+    display: none; /* ocultamos el botón hamburguesa */
+  }
+}
