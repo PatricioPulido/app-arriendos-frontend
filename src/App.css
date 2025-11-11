@@ -109,22 +109,32 @@ button:hover {
 .search-bar {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  align-items: center;
+  margin: 2vh auto;
+  width: 80%;
+  max-width: 600px;
+  gap: 2%;
 }
+
 .search-bar input {
-  padding: 8px;
+  padding: 1.5vh 2%;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 200px;
+  border-radius: 8px;
+  width: 60%;
+  font-size: clamp(14px, 2vw, 18px);
 }
+
 .search-bar button {
-  margin-left: 10px;
-  padding: 8px 12px;
+  padding: 1.5vh 4%;
   background-color: #0077cc;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: clamp(14px, 2vw, 18px);
+  transition: background-color 0.3s ease;
 }
 
-
+.search-bar button:hover {
+  background-color: #005fa3;
+}
