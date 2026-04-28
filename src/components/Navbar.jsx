@@ -7,7 +7,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <div className="navbar-logo">Arrienda tu nuevo paraíso</div>
+      <div className="navbar-logo"></div>
 
       {/* Botón hamburguesa visible solo en móviles */}
       <button
@@ -20,7 +20,7 @@ export default function Navbar() {
 
       <ul className={`menu ${open ? "open" : ""}`}>
         <li><a href="/">Inicio</a></li>
-        <li><a href="/contacto">Contacto</a></li>
+        <li><a href="#contacto">Contacto</a></li>
         <li><a href="/login">Iniciar sesión</a></li>
       </ul>
     </nav>
