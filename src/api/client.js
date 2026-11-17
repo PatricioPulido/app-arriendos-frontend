@@ -5,7 +5,11 @@
 // - Si una peticion responde 401, se renueva el token una vez y se reintenta.
 import axios from "axios";
 
-export const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
+// En produccion (Vercel) el front llama a /api del mismo dominio y vercel.json lo
+// reenvia al backend: la cookie del refresh queda "propia" y no hace falta CORS.
+// En desarrollo apunta al backend local. REACT_APP_API_URL sobreescribe ambos.
+const DEFAULT_API_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8080";
+export const API_URL = (process.env.REACT_APP_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
 
 const api = axios.create({
   baseURL: API_URL,
