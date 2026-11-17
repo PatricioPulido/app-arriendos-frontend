@@ -1,82 +1,103 @@
-/* ==== ESTILOS BASE ==== */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #0077cc;
-  color: white;
-  padding: 10px 20px;
-  position: relative;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--borde);
 }
 
 .navbar-logo {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--primario-oscuro);
+  text-decoration: none;
 }
 
-/* Botón hamburguesa (por defecto visible solo en móvil) */
 .menu-btn {
+  display: none;
+  width: auto;
+  margin: 0;
+  padding: 6px;
   background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  display: none; /* lo ocultamos por defecto (desktop) */
+  color: var(--texto);
 }
+.menu-btn:hover { background: none; }
 
-/* Menú principal */
 .menu {
   list-style: none;
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 22px;
   margin: 0;
+  padding: 0;
 }
 
-.menu li a {
-  color: white;
+.menu a,
+.link-btn {
+  color: var(--texto-suave);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
-.menu li a:hover {
-  text-decoration: underline;
+.menu a:hover,
+.menu a.active { color: var(--primario); }
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.link-btn:hover { background: none; color: var(--peligro); }
+
+.menu .usuario {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--fondo);
+  color: var(--texto-suave);
+  font-size: 0.85rem;
 }
 
-/* ==== MEDIA QUERIES ==== */
+.menu a.btn-nav {
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--acento);
+  color: white;
+  box-shadow: 0 4px 14px rgba(255, 107, 87, 0.35);
+}
+.menu a.btn-nav:hover { color: white; filter: brightness(1.05); }
 
-/* ✅ Hasta 768px: vista móvil */
-@media (max-width: 768px) {
-  .menu-btn {
-    display: block; /* botón visible */
-  }
-
+@media (max-width: 860px) {
+  .navbar { padding: 12px 16px; }
+  .menu-btn { display: block; }
   .menu {
-    display: none; /* ocultamos el menú */
+    display: none;
     position: absolute;
-    top: 60px; /* debajo del navbar */
+    top: 100%;
     left: 0;
-    width: 100%;
-    background-color: #005fa3;
+    right: 0;
     flex-direction: column;
-    text-align: center;
-    padding: 10px 0;
+    gap: 16px;
+    padding: 20px 16px;
+    background: white;
+    border-bottom: 1px solid var(--borde);
+    box-shadow: var(--sombra);
   }
-
-  .menu.open {
-    display: flex; /* mostramos cuando se abre */
-  }
-
-  .menu li {
-    margin: 10px 0;
-  }
-}
-
-/* ✅ Desde 769px en adelante: vista desktop */
-@media (min-width: 769px) {
-  .menu {
-    display: flex; /* menú horizontal visible */
-  }
-
-  .menu-btn {
-    display: none; /* ocultamos el botón hamburguesa */
-  }
+  .menu.open { display: flex; }
 }
