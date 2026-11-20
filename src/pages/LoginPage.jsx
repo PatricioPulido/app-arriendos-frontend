@@ -14,7 +14,7 @@ export default function LoginPage() {
 
   // Con sesion iniciada (recien logueado o ya lo estaba) se va a la pagina que pidio, o a la de su rol
   if (usuario) {
-    const destino = location.state?.desde || (usuario.rol === "ADMIN" ? "/admin" : "/");
+    const destino = location.state?.desde || ({ ADMIN: "/admin", ANFITRION: "/anfitrion" }[usuario.rol] || "/");
     return <Navigate to={destino} replace />;
   }
 
