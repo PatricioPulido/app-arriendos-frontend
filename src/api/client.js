@@ -36,8 +36,14 @@ export function setOnSessionExpired(fn) {
  */
 export function refreshSession() {
   if (!refreshPromise) {
-    refreshPromise = axios
-      .post(`${API_URL}/api/auth/refresh`, null, { withCredentials: true })
+    const pedir = () => axios.post(`${API_URL}/api/auth/refresh`, null, { withCredentials: true });
+    refreshPromise = pedir()
+      // 409: otra pestaña acaba de renovar la sesion; su cookie nueva ya esta guardada,
+      // asi que se reintenta una vez con ella
+      .catch((err) => {
+        if (err.response?.status !== 409) throw err;
+        return new Promise((r) => setTimeout(r, 400)).then(pedir);
+      })
       .then((res) => {
         setAccessToken(res.data.accessToken);
         return res.data;

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
+import { Home, Luggage } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { mensajeDeError } from "../api/client";
 import AuthLayout from "./AuthLayout";
@@ -8,11 +9,15 @@ const VACIO = { nombre: "", apellido: "", email: "", telefono: "", password: "",
 
 export default function RegisterPage() {
   const { register, usuario } = useAuth();
-  const [form, setForm] = useState(VACIO);
+  const [params] = useSearchParams();
+  const [form, setForm] = useState({
+    ...VACIO,
+    tipoCuenta: params.get("tipo") === "anfitrion" ? "ANFITRION" : "HUESPED",
+  });
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
 
-  if (usuario) return <Navigate to="/" replace />;
+  if (usuario) return <Navigate to={usuario.rol === "ANFITRION" ? "/anfitrion" : "/"} replace />;
 
   const set = (campo) => (e) => setForm({ ...form, [campo]: e.target.value });
 
@@ -34,11 +39,25 @@ export default function RegisterPage() {
   return (
     <AuthLayout
       titulo="Crea tu cuenta"
-      subtitulo="Regístrate para reservar tu próximo arriendo."
+      subtitulo="¿Qué quieres hacer? Puedes cambiarlo después."
       pie={<>¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link></>}
     >
       <form onSubmit={onSubmit} className="form" noValidate>
         {error && <div className="alerta alerta-error" role="alert">{error}</div>}
+        <div className="tipo-cuenta" role="radiogroup" aria-label="Tipo de cuenta">
+          {[
+            ["HUESPED", Luggage, "Quiero reservar", "Busca y reserva alojamientos"],
+            ["ANFITRION", Home, "Quiero publicar", "Ofrece tu propiedad y recibe reservas"],
+          ].map(([valor, Icono, titulo, texto]) => (
+            <button key={valor} type="button" role="radio" aria-checked={form.tipoCuenta === valor}
+                    className={`tipo-opcion ${form.tipoCuenta === valor ? "activa" : ""}`}
+                    onClick={() => setForm({ ...form, tipoCuenta: valor })}>
+              <Icono size={22} />
+              <strong>{titulo}</strong>
+              <span>{texto}</span>
+            </button>
+          ))}
+        </div>
         <div className="form-fila">
           <label>Nombre<input value={form.nombre} onChange={set("nombre")} autoComplete="given-name" required autoFocus /></label>
           <label>Apellido<input value={form.apellido} onChange={set("apellido")} autoComplete="family-name" required /></label>

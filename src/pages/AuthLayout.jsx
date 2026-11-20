@@ -8,7 +8,7 @@ export default function AuthLayout({ titulo, subtitulo, children, pie }) {
         <Link to="/" className="auth-logo">Arrienda tu nuevo paraíso</Link>
         <div className="auth-brand-texto">
           <h2>Tu próximo destino te está esperando</h2>
-          <p>Reserva departamentos verificados en minutos y gestiona tus estadías desde un solo lugar.</p>
+          <p>Reserva departamentos en minutos o publica el tuyo y recibe huéspedes, todo desde un solo lugar.</p>
         </div>
         <ul className="auth-beneficios">
           <li>Reservas confirmadas por el anfitrión</li>

@@ -39,6 +39,12 @@ export function AuthProvider({ children }) {
     [aplicarSesion]
   );
 
+  /** Un huesped activa su cuenta de anfitrion; el backend entrega tokens con el rol nuevo. */
+  const hacermeAnfitrion = useCallback(async () => {
+    const { data } = await api.post("/api/auth/hacerme-anfitrion");
+    return aplicarSesion(data);
+  }, [aplicarSesion]);
+
   const logout = useCallback(async () => {
     try {
       await api.post("/api/auth/logout");
@@ -49,8 +55,18 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({ usuario, cargando, login, register, logout, esAdmin: usuario?.rol === "ADMIN" }),
-    [usuario, cargando, login, register, logout]
+    () => ({
+      usuario,
+      cargando,
+      login,
+      register,
+      logout,
+      hacermeAnfitrion,
+      esAdmin: usuario?.rol === "ADMIN",
+      // ADMIN tambien puede publicar y gestionar propiedades
+      esAnfitrion: usuario?.rol === "ANFITRION" || usuario?.rol === "ADMIN",
+    }),
+    [usuario, cargando, login, register, logout, hacermeAnfitrion]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
