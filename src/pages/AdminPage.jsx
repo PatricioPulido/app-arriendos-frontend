@@ -136,7 +136,7 @@ export default function AdminPage() {
   const [aviso, setAviso] = useState(null);
 
   const recargar = useCallback(() => {
-    Promise.all([api.get("/api/departamentos"), api.get("/api/reservas"), api.get("/api/arrendatarios")])
+    Promise.all([api.get("/api/departamentos", { params: { limite: 100 } }), api.get("/api/reservas"), api.get("/api/arrendatarios")])
       .then(([d, r, a]) => setDatos({ deptos: d.data, reservas: r.data, arrendatarios: a.data }))
       .catch((err) => setAviso({ tipo: "error", texto: mensajeDeError(err) }));
   }, []);

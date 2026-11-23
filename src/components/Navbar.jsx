@@ -6,7 +6,7 @@ import "./Navbar.css";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { usuario, esAdmin, logout } = useAuth();
+  const { usuario, esAdmin, esAnfitrion, logout } = useAuth();
   const navigate = useNavigate();
   const cerrar = () => setOpen(false);
 
@@ -27,6 +27,9 @@ export default function Navbar() {
       <ul className={`menu ${open ? "open" : ""}`}>
         <li><NavLink to="/" end onClick={cerrar}>Inicio</NavLink></li>
         {usuario && <li><NavLink to="/mis-reservas" onClick={cerrar}>Mis reservas</NavLink></li>}
+        {usuario && (
+          <li><NavLink to="/anfitrion" onClick={cerrar}>{esAnfitrion ? "Mis propiedades" : "Publica tu propiedad"}</NavLink></li>
+        )}
         {esAdmin && <li><NavLink to="/admin" onClick={cerrar}>Administración</NavLink></li>}
         {usuario ? (
           <>
@@ -35,6 +38,7 @@ export default function Navbar() {
           </>
         ) : (
           <>
+            <li><NavLink to="/registro?tipo=anfitrion" onClick={cerrar}>Publica tu propiedad</NavLink></li>
             <li><NavLink to="/login" onClick={cerrar}>Iniciar sesión</NavLink></li>
             <li><Link to="/registro" className="btn-nav" onClick={cerrar}>Crear cuenta</Link></li>
           </>
