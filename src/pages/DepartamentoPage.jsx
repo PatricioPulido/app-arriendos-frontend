@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import api, { mensajeDeError } from "../api/client";
+import { Comodidades, Destacados, ReglasYHorarios, Ubicacion } from "../ficha/FichaAlojamiento";
 import { useAuth } from "../auth/AuthContext";
 import Galeria from "../components/Galeria";
 import { clp, hoyISO, noches, resumenDepto, ubicacion } from "../format";
@@ -90,11 +91,19 @@ export default function DepartamentoPage() {
         <section>
           {resumenDepto(depto) && <h2 className="detalle-resumen">{resumenDepto(depto)}</h2>}
           {depto.nombreAnfitrion && <p className="anfitrion">Anfitrión: <strong>{depto.nombreAnfitrion}</strong></p>}
-          {depto.descripcion && <p className="descripcion">{depto.descripcion}</p>}
-          {depto.tipologia && <p className="detalle">Tipología: {depto.tipologia}</p>}
+          <Destacados depto={depto} />
+          {(depto.descripcion || depto.tipologia) && (
+            <div className="ficha-seccion">
+              {depto.descripcion && <p className="descripcion">{depto.descripcion}</p>}
+              {depto.tipologia && <p className="detalle">Tipología: {depto.tipologia}</p>}
+            </div>
+          )}
+          <Comodidades depto={depto} />
+          <ReglasYHorarios depto={depto} />
         </section>
         <Reservar depto={depto} />
       </div>
+      <Ubicacion depto={depto} />
     </div>
   );
 }
