@@ -7,6 +7,8 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import RecuperarPage from "./pages/RecuperarPage";
+import RestablecerPage from "./pages/RestablecerPage";
 import MisReservasPage from "./pages/MisReservasPage";
 import AdminPage from "./pages/AdminPage";
 import DepartamentoPage from "./pages/DepartamentoPage";
@@ -32,6 +34,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registro" element={<RegisterPage />} />
+          <Route path="/recuperar-contrasena" element={<RecuperarPage />} />
+          <Route path="/restablecer-contrasena" element={<RestablecerPage />} />
           <Route element={<LayoutConMenu />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/departamentos/:id" element={<DepartamentoPage />} />

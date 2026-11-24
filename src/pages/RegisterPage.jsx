@@ -4,6 +4,7 @@ import { Home, Luggage } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { mensajeDeError } from "../api/client";
 import AuthLayout from "./AuthLayout";
+import CampoClave from "../components/CampoClave";
 
 const VACIO = { nombre: "", apellido: "", email: "", telefono: "", password: "", confirmar: "" };
 
@@ -67,8 +68,8 @@ export default function RegisterPage() {
           <input type="tel" value={form.telefono} onChange={set("telefono")} autoComplete="tel" placeholder="+56 9 1234 5678" />
         </label>
         <div className="form-fila">
-          <label>Contraseña<input type="password" value={form.password} onChange={set("password")} autoComplete="new-password" required /></label>
-          <label>Repite la contraseña<input type="password" value={form.confirmar} onChange={set("confirmar")} autoComplete="new-password" required /></label>
+          <CampoClave label="Contraseña" value={form.password} onChange={set("password")} autoComplete="new-password" required />
+          <CampoClave label="Repite la contraseña" value={form.confirmar} onChange={set("confirmar")} autoComplete="new-password" required />
         </div>
         <p className="ayuda">Mínimo 8 caracteres.</p>
         <button type="submit" className="btn btn-primario"
