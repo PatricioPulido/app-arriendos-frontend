@@ -2,11 +2,32 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api, { mensajeDeError } from "../api/client";
 import GaleriaEditor from "../components/GaleriaEditor";
+import { DESTACADOS, GRUPOS_COMODIDADES, MAX_DESTACADOS } from "../ficha/catalogo";
+import "../ficha/Ficha.css";
 
 const VACIO = {
   nombre: "", descripcion: "", direccion: "", numero: "", idZona: "", tipologia: "",
   capacidad: "", dormitorios: "", banos: "", metrosCuadrados: "", precio: "",
+  // Ficha estilo Airbnb
+  comodidades: [], destacados: [], horaCheckIn: "", horaCheckOut: "",
+  permiteMascotas: null, permiteFumar: null, permiteFiestas: null,
+  reglasAdicionales: "", sobreLaZona: "",
 };
+const TEXTOS_OPCIONALES = ["descripcion", "direccion", "tipologia", "horaCheckIn", "horaCheckOut", "reglasAdicionales", "sobreLaZona"];
+
+/** Si / No / Sin indicar, para las reglas de la casa (null = sin indicar). */
+function SelectorRegla({ etiqueta, valor, onChange }) {
+  const v = valor === true ? "si" : valor === false ? "no" : "";
+  return (
+    <label>{etiqueta}
+      <select value={v} onChange={(e) => onChange(e.target.value === "" ? null : e.target.value === "si")}>
+        <option value="">Sin indicar</option>
+        <option value="si">Sí</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+  );
+}
 const NUMEROS = ["numero", "idZona", "capacidad", "dormitorios", "banos", "metrosCuadrados", "precio"];
 
 /** Crear (/anfitrion/propiedades/nueva) o editar (/anfitrion/propiedades/:id) una propiedad. */
@@ -35,7 +56,7 @@ export default function PropiedadFormPage() {
     if (esNueva) return;
     api.get(`/api/departamentos/${id}`)
       .then(({ data }) => {
-        setForm(Object.fromEntries(Object.keys(VACIO).map((k) => [k, data[k] ?? ""])));
+        setForm(Object.fromEntries(Object.keys(VACIO).map((k) => [k, data[k] ?? VACIO[k]])));
         setImagenes(data.imagenes || []);
         setImagenUrl(data.imagenes?.length ? null : data.imagenUrl ?? null);
         setIdCiudad(data.idCiudad ?? "");
@@ -45,6 +66,12 @@ export default function PropiedadFormPage() {
   }, [id, esNueva]);
 
   const set = (c) => (e) => setForm({ ...form, [c]: e.target.value });
+  const setValor = (c) => (v) => setForm({ ...form, [c]: v });
+  /** Marca o desmarca un codigo en comodidades o destacados. */
+  const alternar = (campo, codigo) => {
+    const lista = form[campo];
+    setForm({ ...form, [campo]: lista.includes(codigo) ? lista.filter((c) => c !== codigo) : [...lista, codigo] });
+  };
 
   const guardar = async (e) => {
     e.preventDefault();
@@ -53,7 +80,7 @@ export default function PropiedadFormPage() {
     setGuardando(true);
     const body = { ...form, imagenUrl };
     NUMEROS.forEach((k) => { body[k] = form[k] === "" ? null : Number(form[k]); });
-    ["descripcion", "direccion", "tipologia"].forEach((k) => { if (!body[k]) body[k] = null; });
+    TEXTOS_OPCIONALES.forEach((k) => { if (!body[k]) body[k] = null; });
     try {
       if (esNueva) {
         const { data } = await api.post("/api/departamentos", body);
@@ -141,6 +168,74 @@ export default function PropiedadFormPage() {
           <label>m²<input type="number" min="0" value={form.metrosCuadrados} onChange={set("metrosCuadrados")} /></label>
           <label>Tipología<input value={form.tipologia} onChange={set("tipologia")} placeholder="2D2B" maxLength={50} /></label>
           <label>Precio por noche (CLP)<input type="number" min="0" value={form.precio} onChange={set("precio")} />{campo("precio")}</label>
+        </div>
+
+        <div className="seccion-form">
+          <h3>Lo mejor de tu alojamiento</h3>
+          <p className="ayuda">Elige hasta {MAX_DESTACADOS}. Es lo primero que lee el huésped y lo que más ayuda a que reserve.</p>
+          <p className="contador-destacados">{form.destacados.length} de {MAX_DESTACADOS} elegidos</p>
+          <div className="tarjetas-destacado">
+            {DESTACADOS.map(({ codigo, titulo, texto, icono: Icono }) => {
+              const activa = form.destacados.includes(codigo);
+              return (
+                <button key={codigo} type="button" className={`tarjeta-destacado ${activa ? "activa" : ""}`}
+                        aria-pressed={activa} onClick={() => alternar("destacados", codigo)}
+                        disabled={!activa && form.destacados.length >= MAX_DESTACADOS}>
+                  <Icono size={22} /><div><strong>{titulo}</strong><span>{texto}</span></div>
+                </button>
+              );
+            })}
+          </div>
+          {campo("destacados")}
+        </div>
+
+        <div className="seccion-form">
+          <h3>Comodidades</h3>
+          <p className="ayuda">Marca todo lo que ofreces. Los huéspedes filtran y comparan por esto.</p>
+          {GRUPOS_COMODIDADES.map((g) => (
+            <div key={g.titulo} className="selector-grupo">
+              <h4>{g.titulo}</h4>
+              <div className="chips">
+                {g.items.map(({ codigo, texto, icono: Icono }) => {
+                  const activa = form.comodidades.includes(codigo);
+                  return (
+                    <button key={codigo} type="button" className={`chip ${activa ? "activa" : ""}`}
+                            aria-pressed={activa} onClick={() => alternar("comodidades", codigo)}>
+                      <Icono size={18} />{texto}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="seccion-form">
+          <h3>Horarios y reglas de la casa</h3>
+          <div className="form-fila">
+            <label>Llegada (check-in) desde<input type="time" value={form.horaCheckIn} onChange={set("horaCheckIn")} />{campo("horaCheckIn")}</label>
+            <label>Salida (check-out) hasta<input type="time" value={form.horaCheckOut} onChange={set("horaCheckOut")} />{campo("horaCheckOut")}</label>
+          </div>
+          <div className="form-fila">
+            <SelectorRegla etiqueta="¿Se admiten mascotas?" valor={form.permiteMascotas} onChange={setValor("permiteMascotas")} />
+            <SelectorRegla etiqueta="¿Se puede fumar?" valor={form.permiteFumar} onChange={setValor("permiteFumar")} />
+            <SelectorRegla etiqueta="¿Fiestas o eventos?" valor={form.permiteFiestas} onChange={setValor("permiteFiestas")} />
+          </div>
+          <label>Otras reglas
+            <textarea rows={3} value={form.reglasAdicionales} onChange={set("reglasAdicionales")} maxLength={1000}
+                      placeholder="Ej: silencio desde las 23:00, no usar la piscina después de las 21:00." />
+            {campo("reglasAdicionales")}
+          </label>
+        </div>
+
+        <div className="seccion-form">
+          <h3>La zona</h3>
+          <label>¿Qué hay cerca?
+            <textarea rows={3} value={form.sobreLaZona} onChange={set("sobreLaZona")} maxLength={1000}
+                      placeholder="Ej: a 3 cuadras de la playa, supermercado a 5 minutos caminando, micro a Viña en la esquina." />
+            {campo("sobreLaZona")}
+          </label>
+          <p className="ayuda">En la ficha se muestra un mapa de la zona, no la dirección exacta.</p>
         </div>
 
         <div className="acciones">
