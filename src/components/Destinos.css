@@ -1,0 +1,176 @@
+/* ===== Etiqueta de atractivo ("Vista a la cordillera") ===== */
+.atractivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--primario-oscuro);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.atractivo svg { flex: 0 0 auto; color: var(--acento); }
+/* Brillo que cruza la etiqueta de vez en cuando */
+.atractivo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.9) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: brillo-etiqueta 5s ease-in-out infinite;
+}
+@keyframes brillo-etiqueta { 0%, 70% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+.atractivo-detalle { background: #ecfeff; box-shadow: none; font-size: 0.85rem; }
+
+/* Foto del alojamiento con la etiqueta encima */
+.card-foto { position: relative; overflow: hidden; }
+.card-foto img { transition: transform 0.6s ease; }
+.card-link:hover .card-foto img { transform: scale(1.06); }
+.card-foto .atractivo { position: absolute; left: 12px; top: 12px; }
+
+/* ===== Seccion Explora por destino ===== */
+.destinos { max-width: 1120px; margin: 0 auto; padding: 40px 16px 8px; }
+.destinos-cabecera { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.destinos h2 { margin: 0; font-size: 1.6rem; letter-spacing: -0.02em; }
+.destinos-lema { margin: 4px 0 0; color: var(--texto-suave); animation: subir 0.4s ease both; }
+.destinos-flechas { display: flex; gap: 8px; }
+.destinos-flechas button {
+  display: grid; place-items: center; width: 36px; height: 36px; padding: 0;
+  border: 1px solid var(--borde); border-radius: 50%; background: white; color: var(--texto); cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.destinos-flechas button:hover { transform: scale(1.08); box-shadow: var(--sombra); }
+
+.rutas { display: flex; gap: 8px; margin: 18px 0 16px; overflow-x: auto; scrollbar-width: none; }
+.rutas::-webkit-scrollbar { display: none; }
+.ruta {
+  flex: 0 0 auto; padding: 8px 16px; border: 1px solid var(--borde); border-radius: 999px;
+  background: white; color: var(--texto); font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.ruta:hover { border-color: var(--texto); }
+.ruta.activa { background: var(--texto); border-color: var(--texto); color: white; }
+
+.destinos-carrusel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 280px);
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 2px 18px;
+  scrollbar-width: thin;
+}
+.destino {
+  position: relative;
+  display: block;
+  height: 340px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  text-align: left;
+  color: white;
+  background: #0f172a;
+  font: inherit;
+  cursor: pointer;
+  scroll-snap-align: start;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  transition: transform 0.35s cubic-bezier(.2, .8, .2, 1), box-shadow 0.35s;
+  animation: subir 0.5s ease both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.destino:hover, .destino:focus-visible { transform: translateY(-6px); box-shadow: 0 22px 40px rgba(15, 23, 42, 0.22); }
+.destino:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+.destino.activo { outline: 3px solid var(--acento); outline-offset: -3px; }
+.destino .escena {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 1.2s cubic-bezier(.2, .8, .2, 1);
+}
+.destino:hover .escena { transform: scale(1.08); }
+/* Oscurece abajo para que el texto se lea */
+.destino::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(15, 23, 42, 0.82) 100%);
+}
+.destino-etiqueta { position: absolute; top: 14px; left: 14px; z-index: 1; }
+.destino-texto { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: 16px; display: grid; gap: 4px; }
+.destino-texto strong { font-size: 1.35rem; letter-spacing: -0.02em; }
+.destino-lema { font-size: 0.88rem; opacity: 0.9; line-height: 1.35; }
+.destino-pie { display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 0.8rem; opacity: 0.9; }
+.destino-conteo { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.2); font-weight: 700; }
+
+/* Banner del destino elegido sobre los resultados */
+.destino-banner {
+  position: relative; display: flex; align-items: flex-end; min-height: 170px; margin-bottom: 24px;
+  border-radius: 18px; overflow: hidden; color: white; animation: subir 0.45s ease both;
+}
+.destino-banner .escena { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.destino-banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.15)); }
+.destino-banner > div { position: relative; z-index: 1; padding: 20px; display: grid; gap: 6px; justify-items: start; }
+.destino-banner h2 { margin: 0; font-size: 1.6rem; letter-spacing: -0.02em; }
+.destino-banner p { margin: 0; opacity: 0.92; }
+.destino-banner .btn { margin-top: 6px; background: white; color: var(--texto); }
+
+/* ===== Animaciones de las ilustraciones ===== */
+.escena .nube { animation: nube 26s linear infinite alternate; }
+.escena .nube-2 { animation-duration: 34s; animation-direction: alternate-reverse; }
+@keyframes nube { from { transform: translateX(-30px); } to { transform: translateX(60px); } }
+.escena .sol { animation: latido 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes latido { 50% { transform: scale(1.12); opacity: 0.85; } }
+.escena .ola { animation: ola 3.5s linear infinite; }
+.escena .ola-2 { animation-duration: 5s; animation-direction: reverse; }
+@keyframes ola { to { transform: translateX(40px); } }
+.escena .espuma { animation: espuma 4s ease-in-out infinite; }
+@keyframes espuma { 50% { transform: translateY(4px); opacity: 0.4; } }
+.escena .rio-brillo { animation: fluir 2.5s linear infinite; }
+@keyframes fluir { to { stroke-dashoffset: -56; } }
+.escena .humo circle { animation: humo 5s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.escena .humo circle:nth-child(2) { animation-delay: 1.6s; }
+.escena .humo circle:nth-child(3) { animation-delay: 3.2s; }
+@keyframes humo { 0% { transform: translate(0, 6px) scale(0.6); opacity: 0; } 30% { opacity: 0.8; } 100% { transform: translate(14px, -16px) scale(1.4); opacity: 0; } }
+.escena .reflejo { animation: reflejo 3s ease-in-out infinite; }
+.escena .reflejo-1 { animation-delay: 1s; }
+.escena .reflejo-2 { animation-delay: 2s; }
+@keyframes reflejo { 50% { opacity: 0.15; transform: translateX(8px); } }
+.escena .velero { animation: velero 14s ease-in-out infinite alternate; }
+@keyframes velero { to { transform: translateX(70px); } }
+.escena .faro-luz { animation: luz 2s ease-in-out infinite; }
+.escena .luz { animation: luz 3s ease-in-out infinite; }
+.escena .luz-1 { animation-delay: 1s; }
+.escena .luz-2 { animation-delay: 2s; }
+@keyframes luz { 50% { opacity: 0.25; } }
+.escena .hojas circle { animation: latido 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+/* Aparicion al hacer scroll */
+.aparecer { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.aparecer.visible { opacity: 1; transform: none; }
+@keyframes subir { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 600px) {
+  .destinos { padding-top: 28px; }
+  .destinos-flechas { display: none; }
+  .destinos-carrusel { grid-auto-columns: 78%; }
+  .destino { height: 300px; }
+}
+
+/* Quien pidio menos movimiento en su sistema no ve animaciones */
+@media (prefers-reduced-motion: reduce) {
+  .escena *, .atractivo::after, .destino, .destinos-lema, .destino-banner { animation: none !important; }
+  .aparecer { opacity: 1; transform: none; transition: none; }
+  .destino, .destino .escena, .card-foto img { transition: none; }
+}
+
+/* Resultados */
+.resultados { scroll-margin-top: 80px; }
+.titulo-seccion { margin: 0 0 20px; font-size: 1.6rem; letter-spacing: -0.02em; }
+.card-aparece { animation: subir 0.45s ease both; animation-delay: calc(var(--i, 0) * 50ms); }
+@media (prefers-reduced-motion: reduce) { .card-aparece { animation: none; } }
+.detalle-atractivo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0 0; color: var(--texto-suave); font-size: 0.92rem; }

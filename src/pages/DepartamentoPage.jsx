@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import api, { mensajeDeError } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import Galeria from "../components/Galeria";
+import Atractivo from "../components/Atractivo";
+import { atractivoDe, destinoDe } from "../destinos";
 import { clp, hoyISO, noches, resumenDepto, ubicacion } from "../format";
 
 function Reservar({ depto }) {
@@ -84,6 +86,12 @@ export default function DepartamentoPage() {
       <h1 className="titulo-pagina">{depto.nombre}</h1>
       {(ubicacion(depto) || depto.direccion) && (
         <p className="direccion">{[ubicacion(depto), depto.direccion].filter(Boolean).join(" · ")}</p>
+      )}
+      {atractivoDe(depto) && (
+        <p className="detalle-atractivo">
+          <Atractivo atractivo={atractivoDe(depto)} className="atractivo-detalle" />
+          <span>{destinoDe(depto).lema}</span>
+        </p>
       )}
       <Galeria imagenes={depto.imagenes} alt={depto.nombre} />
       <div className="detalle-layout">
