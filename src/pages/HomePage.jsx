@@ -33,8 +33,8 @@ export default function HomePage() {
   return (
     <>
       <section className="hero">
-        <h1>Encuentra tu próximo arriendo</h1>
-        <p>Departamentos listos para tu próxima estadía, con reserva en línea.</p>
+        <h1>Tu próximo destino en Chile</h1>
+        <p>Arrienda lo que necesitas, donde lo necesites: en la costa, la cordillera o el sur.</p>
         <SearchBar onSearch={buscar} />
       </section>
 

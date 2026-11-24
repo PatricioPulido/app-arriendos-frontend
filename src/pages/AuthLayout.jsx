@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
+import { MARCA } from "../marca";
 
 /** Marco comun de login y registro: panel de marca a la izquierda, formulario a la derecha. */
 export default function AuthLayout({ titulo, subtitulo, children, pie }) {
   return (
     <div className="auth-page">
       <aside className="auth-brand">
-        <Link to="/" className="auth-logo">Arrienda tu nuevo paraíso</Link>
+        <Link to="/" className="auth-logo">{MARCA}</Link>
         <div className="auth-brand-texto">
           <h2>Tu próximo destino te está esperando</h2>
           <p>Reserva departamentos en minutos o publica el tuyo y recibe huéspedes, todo desde un solo lugar.</p>
