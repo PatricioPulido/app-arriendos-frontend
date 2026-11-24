@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://CAMBIAR-POR-TU-BACKEND.onrender.com/api/:path*" },
+    { "source": "/api/:path*", "destination": "https://arriendos-api.onrender.com/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
