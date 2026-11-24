@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, User } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import "./Navbar.css";
+import { MARCA } from "../marca";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-logo" onClick={cerrar}>Arrienda tu nuevo paraíso</Link>
+      <Link to="/" className="navbar-logo" onClick={cerrar}>{MARCA}</Link>
 
       <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Abrir menú">
         {open ? <X size={24} /> : <Menu size={24} />}
