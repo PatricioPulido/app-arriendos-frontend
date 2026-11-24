@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 import api, { refreshSession } from "./api/client";
 
@@ -38,4 +38,38 @@ test("el registro deja elegir entre reservar y publicar", async () => {
   const publicar = await screen.findByRole("radio", { name: /Quiero publicar/ });
   expect(publicar).toHaveAttribute("aria-checked", "true");
   expect(screen.getByRole("radio", { name: /Quiero reservar/ })).toHaveAttribute("aria-checked", "false");
+});
+
+test("el login deja ver la contraseña y tiene enlace para recuperarla", async () => {
+  window.history.pushState({}, "", "/login");
+  render(<App />);
+  const clave = await screen.findByLabelText("Contraseña");
+  expect(clave).toHaveAttribute("type", "password");
+  fireEvent.click(screen.getByRole("button", { name: "Mostrar contraseña" }));
+  expect(clave).toHaveAttribute("type", "text");
+  fireEvent.click(screen.getByRole("button", { name: "Ocultar contraseña" }));
+  expect(clave).toHaveAttribute("type", "password");
+  expect(screen.getByRole("link", { name: "¿Olvidaste tu contraseña?" })).toHaveAttribute("href", "/recuperar-contrasena");
+});
+
+test("recuperar contraseña envia el email y muestra el aviso", async () => {
+  api.post.mockResolvedValue({ data: { mensaje: "Si existe una cuenta con ese email, te enviamos un enlace." } });
+  window.history.pushState({}, "", "/recuperar-contrasena");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("Email"), { target: { value: "ana@test.cl" } });
+  fireEvent.click(screen.getByRole("button", { name: "Enviar enlace" }));
+  expect(await screen.findByText(/te enviamos un enlace/)).toBeInTheDocument();
+  expect(api.post).toHaveBeenCalledWith("/api/auth/recuperar", { email: "ana@test.cl" });
+});
+
+test("el enlace del correo permite guardar una nueva contraseña", async () => {
+  api.post.mockResolvedValue({ data: { mensaje: "Listo, tu contraseña se cambió." } });
+  window.history.pushState({}, "", "/restablecer-contrasena?token=abc123");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("Nueva contraseña"), { target: { value: "clave-nueva-1" } });
+  fireEvent.change(screen.getByLabelText("Repite la contraseña"), { target: { value: "clave-nueva-1" } });
+  fireEvent.click(screen.getByRole("button", { name: "Guardar contraseña" }));
+  expect(await screen.findByText("Listo, tu contraseña se cambió.")).toBeInTheDocument();
+  expect(api.post).toHaveBeenCalledWith("/api/auth/restablecer", { token: "abc123", password: "clave-nueva-1" });
+  expect(window.location.search).toBe("");
 });

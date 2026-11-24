@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { mensajeDeError } from "../api/client";
 import AuthLayout from "./AuthLayout";
+import CampoClave from "../components/CampoClave";
 
 export default function LoginPage() {
   const { login, usuario } = useAuth();
@@ -43,11 +44,9 @@ export default function LoginPage() {
           <input type="email" autoComplete="email" value={email}
                  onChange={(e) => setEmail(e.target.value)} required autoFocus />
         </label>
-        <label>
-          Contraseña
-          <input type="password" autoComplete="current-password" value={password}
-                 onChange={(e) => setPassword(e.target.value)} required />
-        </label>
+        <CampoClave label="Contraseña" autoComplete="current-password" value={password}
+                    onChange={(e) => setPassword(e.target.value)} required />
+        <Link to="/recuperar-contrasena" className="link-olvido">¿Olvidaste tu contraseña?</Link>
         <button type="submit" className="btn btn-primario" disabled={enviando || !email || !password}>
           {enviando ? "Ingresando…" : "Iniciar sesión"}
         </button>

@@ -104,6 +104,19 @@ input:focus, select:focus {
   border-color: var(--primario);
   box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.15);
 }
+/* Contraseña con boton de ojo */
+.campo-clave { position: relative; }
+.campo-clave input { padding-right: 46px; }
+.ver-clave {
+  position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border: none; border-radius: 8px;
+  background: transparent; color: var(--texto-suave); cursor: pointer;
+}
+.ver-clave:hover { background: var(--fondo); color: var(--texto); }
+.ver-clave:focus-visible { outline: 2px solid var(--primario); outline-offset: 1px; }
+.link-olvido { align-self: flex-end; margin-top: -8px; font-size: 0.88rem; font-weight: 600; color: var(--primario); }
+
 .opcional, .ayuda { font-weight: 400; color: #94a3b8; font-size: 0.82rem; margin: -8px 0 0; }
 
 .alerta { padding: 12px 14px; border-radius: 10px; font-size: 0.92rem; margin-bottom: 4px; }
